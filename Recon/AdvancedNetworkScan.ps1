@@ -1,5 +1,12 @@
 # Dev en cours
 
+##############################################################################
+
+                Recon Network Scan
+
+##############################################################################
+
+
 # Vérifier si le script est exécuté en tant qu'administrateur
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relancer le script en tant qu'administrateur
