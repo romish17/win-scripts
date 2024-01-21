@@ -1,12 +1,7 @@
 # Dev en cours
-
 ##############################################################################
-
-                Recon Network Scan
-
+#                Recon Network Scan
 ##############################################################################
-
-
 # Vérifier si le script est exécuté en tant qu'administrateur
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     # Relancer le script en tant qu'administrateur
@@ -14,17 +9,14 @@ if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     Start-Process powershell -Verb runAs -ArgumentList $arguments
     exit
 }
-
 # Installation de choco
 # Vérifier si Chocolatey est installé
 $chocoPath = Get-Command choco -ErrorAction SilentlyContinue
-
 if ($chocoPath) {
     Write-Host "Test présence de Chocolatey [x]"
 } else {
     Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
 }
-
 function CheckComponentInstallation($components){
     foreach($command in $components){
         $checkCommandPath = Get-Command $command -ErrorAction SilentlyContinue
@@ -37,12 +29,10 @@ function CheckComponentInstallation($components){
         }
     }
 }
-
 function Get-NetworkAddress {
     param(
         [string]$prompt = "Veuillez entrer l'adresse réseau avec le masque (ex: 192.168.0.0/24): "
     )
-
     do {
         $address = Read-Host -Prompt $prompt
         $valid = $address -match '^\d{1,3}(\.\d{1,3}){3}\/\d{1,2}$'
@@ -50,17 +40,22 @@ function Get-NetworkAddress {
             Write-Host "Format invalide. Veuillez entrer l'adresse sous la forme '192.168.0.0/24'."
         }
     } while (-not $valid)
-
     return $address
+}
+
+
+function scan_smb($target){
+
+    nmap --script "safe or smb-enum-*" -p 445 $target
+
 }
 
 $AllComponents = "nmap","awk";
 
 CheckComponentInstallation($AllComponents);
 
+############# Début du scan #########################################
 
-
-# Utilisation de la fonction
 $LAN = Get-NetworkAddress
 Write-Host "Réseau : $LAN"
 
@@ -71,6 +66,11 @@ $IP_LIST = nmap -sn $LAN -oG - | awk '/Up$/{print $2}'
 #nmap --top-ports 20 --open $IP_LIST
 
 #$nmapResult = & nmap -sT $IP_LIST | Out-String
+
+Write-Host $IP_LIST;
+
+################# IP List ##########################################
+
 
 $hostsDATA = @()
 
@@ -102,6 +102,9 @@ nmap --script "rdp-enum-encryption or rdp-vuln-ms12-020 or rdp-ntlm-info" -p 338
 
 # Scan UDP
 nmap -sU -sV --version-intensity 0 -F -n 199.66.11.53/24
+
+$target=192.168.187.50
+scan_smb($target)
 
 # list des scripts NMAP avec description
 # Exemple avec SMB
