@@ -171,8 +171,6 @@ choco install protonmail -y
 
 
 # Config Windows Terminal
-$env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-
 $term_conf_url = "https://github.com/R0M-0X/Scripts/blob/main/_Assets/Terminal/settings.json?raw=true"
 $term_conf_path = "$env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
 if (!(Test-Path $term_conf_path)) {
