@@ -28,14 +28,13 @@ reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Pers
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v "SystemUsesLightTheme" /t REG_DWORD /d 0 /f
 
 # Disable searchbox
-
 reg add "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer" /f
 reg add "HKEY_CURRENT_USER\Software\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d 1 /f
 reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Search" /v "SearchboxTaskbarMode" /t REG_DWORD /d 0 /f
 
 # View all icons in taskbar
-#reg add 'HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify' /v SystemTrayChevronVisibility /t REG_DWORD /d 1 /f
-#reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer' /v EnableAutoTray /t REG_DWORD /d 1 /f
+reg add 'HKEY_CURRENT_USER\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\TrayNotify' /v SystemTrayChevronVisibility /t REG_DWORD /d 1 /f
+reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer' /v EnableAutoTray /t REG_DWORD /d 1 /f
 
 # Hide feed and weather widget
 reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' /v TaskbarDa /t REG_DWORD /d 0 /f
@@ -140,34 +139,38 @@ Get-AppxPackage -Name $UWPApp -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayName -eq $UWPApp | Remove-AppxProvisionedPackage -Online
 }
 
+# Set PSRepository
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-Install-PackageProvider -Name NuGet -Force -Confirm:$false -Force
+Install-PackageProvider -Name NuGet -Force
+# Installation du module mises a jour
+Install-Module PSWindowsUpdate -force
 
-### Choco
+### Choco install
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 # choco install microsoft-windows-terminal microsoft-teams vscode atom git terraform awscli lxc multipass nano nmap wget curl
 
-choco install firefox -y
-choco install termius -y 
-choco install nmap -y
-choco install wget -y 
-choco install curl -y
-choco install wireguard -y
-choco install vscode -y
-choco install spotify -y
-choco install nerd-fonts-FiraCode -y
-choco install FiraCode -y
-choco install github-desktop 
-choco install putty -y
-choco install googlechrome -y
-choco install vlc -y
-choco install 7zip -y 
-choco install discord -y
-choco install oh-my-posh -y
-choco install pnpm -y
-choco install veracrypt -y
-choco install protonpass -y
-choco install protonmail -y
+###Test -> --ignore-checksums
+choco install firefox -y --ignore-checksums
+choco install termius -y --ignore-checksums
+choco install nmap -y --ignore-checksums
+choco install wget -y --ignore-checksums
+choco install curl -y --ignore-checksums
+choco install wireguard -y --ignore-checksums
+choco install vscode -y --ignore-checksums
+choco install spotify -y --ignore-checksums
+choco install nerd-fonts-FiraCode -y --ignore-checksums
+choco install FiraCode -y --ignore-checksums
+choco install github-desktop -y --ignore-checksums
+choco install putty -y --ignore-checksums
+choco install googlechrome -y --ignore-checksums
+choco install vlc -y --ignore-checksums
+choco install 7zip -y --ignore-checksums
+choco install discord -y --ignore-checksums
+choco install oh-my-posh -y --ignore-checksums
+choco install pnpm -y --ignore-checksums
+choco install veracrypt -y --ignore-checksums
+choco install protonpass -y --ignore-checksums
+choco install protonmail -y --ignore-checksums
 
 
 # Config Windows Terminal
@@ -185,22 +188,10 @@ if (!(Test-Path $term_conf_path)) {
 REG ADD "HKEY_LOCAL_MACHINE\Software\Policies\Mozilla\Firefox" /v DisableTelemetry /t REG_DWORD /d 1 /f
 
 #DellCommandUpdate
-
-If ($Fab -like "Dell Inc."){ 
-	choco install DellCommandUpdate -y
-    }
-
+If ($Fab -like "Dell Inc."){ choco install DellCommandUpdate -y; }
 #Hp Support Assistant
-
-If ($Fab -like "HP" -or $Fab -like "Hewlett-Packard"){
-    choco install hpsupportassistant hpdiagnostics -y
-    }
+If ($Fab -like "HP" -or $Fab -like "Hewlett-Packard"){ choco install hpsupportassistant hpdiagnostics -y; }
 		
-# Installation du module mises a jour
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
-Start-Sleep -Seconds 10
-Install-Module PSWindowsUpdate -force 
-Start-Sleep -Seconds 10 
-
 # Installation des mises a jour + reboot
+## Get-Command -Module PSWindowsUpdate
 Install-WindowsUpdate -ForceDownload -ForceInstall -AcceptAll -AutoReboot
