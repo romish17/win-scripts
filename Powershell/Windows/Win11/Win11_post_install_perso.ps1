@@ -81,6 +81,7 @@ powercfg /change standby-timeout-dc 0 # Sur Batterie
 
 
 # Download wallpaper
+$wallpaper_path = C:\Users\Public\Pictures\wall3.jpg
 Invoke-WebRequest -Uri 'https://github.com/R0M-0X/Scripts/blob/main/_Assets/Wallpapers/wall3.jpg?raw=true' -OutFile C:\Users\Public\Pictures\wall3.jpg
 
 # Set wallpaper
@@ -103,14 +104,14 @@ $setwallpapersrc = @"
     }
 "@
 Add-Type -TypeDefinition $setwallpapersrc
-[wallpaper]::SetWallpaper($image_path)
+[wallpaper]::SetWallpaper($wallpaper_path)
 
 # Lock screen
 
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization" /t REG_SZ /v "LockScreenImagePath" /d $image_path /f
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Personalization" /t REG_SZ /v "LockScreenImagePath" /d $wallpaper_path /f
 
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" /t REG_SZ /v "LockScreenImagePath" /d $image_path /f
-REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" /t REG_SZ /v "LockScreenImageUrl" /d $image_path /f
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" /t REG_SZ /v "LockScreenImagePath" /d $wallpaper_path /f
+REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" /t REG_SZ /v "LockScreenImageUrl" /d $wallpaper_path /f
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" /v LockScreenImageStatus /t REG_DWORD /d 1 /f
 
 ## Restart explorer 
@@ -153,7 +154,7 @@ Get-AppXProvisionedPackage -Online | Where-Object DisplayName -eq $UWPApp | Remo
 
 # Set PSRepository
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-Install-PackageProvider -Name NuGet -Force
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 # Installation du module mises a jour
 Install-Module PSWindowsUpdate -force
 
