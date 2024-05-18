@@ -81,8 +81,8 @@ powercfg /change standby-timeout-dc 0 # Sur Batterie
 
 
 # Download wallpaper
-$wallpaper_path = C:\Users\Public\Pictures\wall3.jpg
-Invoke-WebRequest -Uri 'https://github.com/R0M-0X/Scripts/blob/main/_Assets/Wallpapers/wall3.jpg?raw=true' -OutFile C:\Users\Public\Pictures\wall3.jpg
+$wallpaper_path = 'C:\Users\Public\Pictures\wall3.jpg'
+Invoke-WebRequest -Uri 'https://github.com/R0M-0X/Scripts/blob/main/_Assets/Wallpapers/wall3.jpg?raw=true' -OutFile $wallpaper_path
 
 # Set wallpaper
 $setwallpapersrc = @"
