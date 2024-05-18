@@ -41,10 +41,25 @@ reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Ad
 reg add 'HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced' /v Start_Layout /t REG_DWORD /d 1 /f
 
 # Disable Copilot
-reg add HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f
+reg add 'HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot' /v TurnOffWindowsCopilot /t REG_DWORD /d 1 /f
+
+# Disable Quick start boot
+reg add 'HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power' /v HiberbootEnabled /t REG_DWORD /d 0 /f
+
+# Return to classic right click menu
+reg add "HKCU\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /f
 
 # Show file extension
 reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
+
+#### Edge
+reg add "HKLM\Software\Policies\Microsoft\Edge" /v "HideFirstRunExperience" /t REG_DWORD /d 1 /f
+reg add "HKCU\Software\Policies\Microsoft\Edge" /v "HideFirstRunExperience" /t REG_DWORD /d 1 /f
+
+reg add "HKCU\Software\Policies\Microsoft\Edge" /v "HomepageLocation" /t REG_SZ /d "https://www.google.fr" /f
+# https://admx.help/?Category=EdgeChromium&Policy=Microsoft.Policies.Edge::HomepageLocation
+
+
 
 taskkill /F /IM explorer.exe;start explorer
 
@@ -64,14 +79,11 @@ powercfg /change monitor-timeout-dc 60 # Sur Batterie
 powercfg /change standby-timeout-ac 0 # Sur alimentation
 powercfg /change standby-timeout-dc 0 # Sur Batterie
 
-$image_url = "https://github.com/R0M-0X/Scripts/blob/main/_Assets/Wallpapers/wall3.jpg?raw=true"
-$image_path = "C:\Users\Public\Pictures\wall3.jpg"
-if (!(Test-Path $image_path)) {
-    (New-Object System.Net.WebClient).DownloadFile($image_url, $image_path)
-    if (!(Test-Path $image_path)) {
-        exit
-    }
-}
+
+# Download wallpaper
+Invoke-WebRequest -Uri 'https://github.com/R0M-0X/Scripts/blob/main/_Assets/Wallpapers/wall3.jpg?raw=true' -OutFile C:\Users\Public\Pictures\wall3.jpg
+
+# Set wallpaper
 $setwallpapersrc = @"
     using Microsoft.Win32;
     using System.Runtime.InteropServices;
@@ -149,6 +161,9 @@ Install-Module PSWindowsUpdate -force
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 # choco install microsoft-windows-terminal microsoft-teams vscode atom git terraform awscli lxc multipass nano nmap wget curl
 
+# Disable Windows Update during software installation
+net stop wuauserv
+
 ###Test -> --ignore-checksums
 choco install firefox -y --ignore-checksums
 choco install termius -y --ignore-checksums
@@ -161,7 +176,7 @@ choco install spotify -y --ignore-checksums
 choco install nerd-fonts-FiraCode -y --ignore-checksums
 choco install FiraCode -y --ignore-checksums
 choco install github-desktop -y --ignore-checksums
-choco install putty -y --ignore-checksums
+choco install putty.install -y --ignore-checksums
 choco install googlechrome -y --ignore-checksums
 choco install vlc -y --ignore-checksums
 choco install 7zip -y --ignore-checksums
@@ -171,17 +186,13 @@ choco install pnpm -y --ignore-checksums
 choco install veracrypt -y --ignore-checksums
 choco install protonpass -y --ignore-checksums
 choco install protonmail -y --ignore-checksums
+choco install onedrive -y --ignore-checksums
 
+net start wuauserv
 
 # Config Windows Terminal
-$term_conf_url = "https://github.com/R0M-0X/Scripts/blob/main/_Assets/Terminal/settings.json?raw=true"
-$term_conf_path = "$env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
-if (!(Test-Path $term_conf_path)) {
-    (New-Object System.Net.WebClient).DownloadFile($term_conf_url, $term_conf_path)
-    if (!(Test-Path $term_conf_path)) {
-        exit
-    }
-}
+Invoke-WebRequest -Uri 'https://github.com/R0M-0X/Scripts/blob/main/_Assets/Terminal/settings.json?raw=true' -OutFile $env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+
 
 ###### Firefox
 #https://admx.help/?Category=Firefox&Policy=Mozilla.Policies.Firefox::DisableTelemetry
