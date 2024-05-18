@@ -165,28 +165,28 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 net stop wuauserv
 
 ###Test -> --ignore-checksums
-choco install firefox -y --ignore-checksums
-choco install termius -y --ignore-checksums
-choco install nmap -y --ignore-checksums
-choco install wget -y --ignore-checksums
-choco install curl -y --ignore-checksums
-choco install wireguard -y --ignore-checksums
-choco install vscode -y --ignore-checksums
-choco install spotify -y --ignore-checksums
-choco install nerd-fonts-FiraCode -y --ignore-checksums
-choco install FiraCode -y --ignore-checksums
-choco install github-desktop -y --ignore-checksums
-choco install putty.install -y --ignore-checksums
-choco install googlechrome -y --ignore-checksums
-choco install vlc -y --ignore-checksums
-choco install 7zip -y --ignore-checksums
-choco install discord -y --ignore-checksums
-choco install oh-my-posh -y --ignore-checksums
-choco install pnpm -y --ignore-checksums
-choco install veracrypt -y --ignore-checksums
-choco install protonpass -y --ignore-checksums
-choco install protonmail -y --ignore-checksums
-choco install onedrive -y --ignore-checksums
+choco install firefox -y
+choco install termius -y
+choco install nmap -y
+choco install wget -y
+choco install curl -y
+choco install wireguard -y
+choco install vscode -y
+choco install spotify -y
+choco install nerd-fonts-FiraCode -y
+choco install FiraCode -y
+choco install github-desktop -y
+choco install putty.install -y
+choco install googlechrome -y
+choco install vlc -y
+choco install 7zip -y
+choco install discord -y
+choco install oh-my-posh -y
+choco install pnpm -y
+choco install veracrypt -y
+choco install protonpass -y
+choco install protonmail -y
+choco install onedrive -y
 
 net start wuauserv
 
