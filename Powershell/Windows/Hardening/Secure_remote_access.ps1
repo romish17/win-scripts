@@ -1,6 +1,6 @@
 
 
-$RDP_Port = 13390
+$RDP_Port = 3389
 
 ################ RDP ################
 # Activation NLA pour le RDP + activation RDP

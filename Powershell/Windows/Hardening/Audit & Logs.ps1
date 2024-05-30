@@ -131,10 +131,8 @@ Auditpol /set /subcategory:{0CCE9210-69AE-11D9-BED3-505054503030} /success:enabl
 Auditpol /set /subcategory:{0CCE9211-69AE-11D9-BED3-505054503030} /success:enable /failure:enable
 # Auditpol /set /subcategory:"System Integrity" /success:enable /failure:enable
 Auditpol /set /subcategory:{0CCE9212-69AE-11D9-BED3-505054503030} /success:enable /failure:enable
-
-
-
-
-
-
+# Auditpol /set /subcategory:"Special logon" /success:enable /failure:enable
+Auditpol /set /subcategory:{0CCE921B-69AE-11D9-BED3-505054503030} /success:enable /failure:enable
+# Auditpol /set /subcategory:"Other logon / logoff" /success:enable /failure:enable
+Auditpol /set /subcategory:{0CCE921C-69AE-11D9-BED3-505054503030} /success:enable /failure:enable
 

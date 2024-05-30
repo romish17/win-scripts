@@ -1,12 +1,3 @@
-vssadmin create shadow /for=C:
-vssadmin create shadow /for=D:
-vssadmin resize shadowstorage /on=c: /for=c: /maxsize=5000MB
-vssadmin resize shadowstorage /on=c: /for=c: /maxsize=5000MB
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore" /v SystemRestorePointCreationFrequency /t REG_DWORD /d 20 /f
-powershell.exe -ExecutionPolicy Bypass -Command "Checkpoint-Computer -Description 'BeforeSecurityHardening' -RestorePointType 'MODIFY_SETTINGS'"
-# Creation du point de controle -> OK
-
-
 # General OS hardening
 # Disable DNS Multicast, NTLM, SMBv1, NetBIOS over TCP/IP, PowerShellV2, AutoRun, 8.3 names, Last Access timestamp and weak TLS/SSL ciphers and protocols
 # Enables UAC, SMB/LDAP Signing, Show hidden files
@@ -57,8 +48,6 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v RestrictRemoteSAM /t REG_
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v UseMachineId /t REG_DWORD /d 1 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v LimitBlankPasswordUse /t REG_DWORD /d 1 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Wpad" /v WpadOverride /t REG_DWORD /d 1 /f
-
-
 # Stop NetBIOS over TCP/IP
 wmic /interactive:off nicconfig where TcpipNetbiosOptions=0 call SetTcpipNetbios 2
 wmic /interactive:off nicconfig where TcpipNetbiosOptions=1 call SetTcpipNetbios 2
@@ -68,9 +57,6 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\mrxsmb10" /v Start /t REG_DWORD 
 # Disable Powershellv2
 powershell.exe Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2
 powershell.exe Disable-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root
-
-
-################################################
 # Disable the ClickOnce trust promp
 # this only partially mitigates the risk of malicious ClickOnce Appps - the ability to run the manifest is disabled, but hash retrieval is still possible
 reg add "HKLM\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLevel" /v MyComputer /t REG_SZ /d "Disabled" /f
@@ -79,8 +65,9 @@ reg add "HKLM\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLe
 reg add "HKLM\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLevel" /v TrustedSites /t REG_SZ /d "Disabled" /f
 reg add "HKLM\SOFTWARE\MICROSOFT\.NETFramework\Security\TrustManager\PromptingLevel" /v UntrustedSites /t REG_SZ /d "Disabled" /f
 
+# Desactivation de Windows Script Host -> malware Raspberry Robin et Windows Defender
+reg add "HKLM\SOFTWARE\Microsoft\Windows Script Host\Settings" /v Enabled /t REG_DWORD /d 0 /f
 
-################ Firewall  ################
 # Enable Windows Firewall and configure some advanced options
 # Block Win32/64 binaries (LOLBins) from making net connections when they shouldn't
 # ---------------------
@@ -139,12 +126,8 @@ netsh advfirewall firewall add rule name="Block wmic.exe netconns" program="%sys
 netsh advfirewall firewall add rule name="Block wscript.exe netconns" program="%systemroot%\system32\wscript.exe" protocol=tcp dir=out enable=yes action=block profile=any
 netsh advfirewall firewall add rule name="Block wscript.exe netconns" program="%systemroot%\SysWOW64\wscript.exe" protocol=tcp dir=out enable=yes action=block profile=any
 netsh Advfirewall set allprofiles state on
-
 # Disable TCP timestamps
 netsh int tcp set global timestamps=disabled
-
-
-
 # Disable SMBv3 compression
 # You can disable compression to block unauthenticated attackers from exploiting the vulnerability against an SMBv3 Server with the PowerShell command below.
 # No reboot is needed after making the change. This workaround does not prevent exploitation of SMB clients.
@@ -152,19 +135,12 @@ powershell.exe Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\L
 # You can disable the workaround with the PowerShell command below.
 # powershell.exe Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" DisableCompression -Type DWORD -Value 0 -Force
 
-# Disable storing password in memory in cleartext
-reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0
-
-
-
 
 # Windows Update Settings
 # Prevent Delivery Optimization from downloading Updates from other computers across the internet
 # 1 will restrict to LAN only. 0 will disable the feature entirely
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeliveryOptimization" /v DODownloadMode /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\DeliveryOptimization\Config" /v DODownloadMode /t REG_DWORD /d 0 /f
-
-
 
 # Removal Media Settings
 # Disable autorun/autoplay on all drives
@@ -176,17 +152,10 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v No
 Disable-WindowsOptionalFeature -Online -FeatureName smb1protocol
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\mrxsmb10" /v Start /t REG_DWORD /d 4 /f
 
-
 ## Show known file extensions and hidden files
 # ---------------------
 reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
 reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "Hidden" /t REG_DWORD /d 1 /f
 reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowSuperHidden" /t REG_DWORD /d 1 /f
-
-
-
-
-
-
 
 

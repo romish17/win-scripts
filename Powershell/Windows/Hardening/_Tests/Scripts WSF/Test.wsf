@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<!-- Mixing JScript and VBScript -->
+ <job id="SORT-VBScriptWithJScript">
+   <script language="JScript">
+     function SortVBArray(arrVBArray) {return arrVBArray.toArray().sort();}
+   </script>
+   <script language="VBScript">
+'    <![CDATA[
+     '** Fastest sort: call the Jscript sort from VBScript
+     myData = "a,b,c,1,2,3,X,Y,Z,p,d,q"
+     wscript.echo "Original List of values: " & vbTab & myData
+     starttime = timer()
+     sortedArray = SortVBArray(split(myData,","))
+     endtime=timer()
+     jscriptTime = round(endtime-starttime,2)
+     wscript.echo "JScript sorted in " & jscriptTime & " seconds: "  & vbTab & sortedArray
+'    ]]>
+   </script>
+ </job>

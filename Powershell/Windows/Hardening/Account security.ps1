@@ -40,7 +40,8 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" /v LetAppsActivate
 # Prevent Windows app voice activation entirely (be mindful of those with accesibility needs)
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppPrivacy" /v LetAppsActivateWithVoice /t REG_DWORD /d 2 /f
 
-
+# Disable storing password in memory in cleartext
+reg add HKLM\SYSTEM\CurrentControlSet\Control\SecurityProviders\WDigest /v UseLogonCredential /t REG_DWORD /d 0
 
 ################################################
 # Harden lsass to help protect against credential dumping (Mimikatz)
