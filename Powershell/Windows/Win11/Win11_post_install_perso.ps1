@@ -194,6 +194,7 @@ choco install veracrypt -y
 choco install protonpass -y
 choco install protonmail -y
 choco install onedrive -y
+choco install nodejs -y
 
 net start wuauserv
 
