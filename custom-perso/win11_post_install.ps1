@@ -73,7 +73,7 @@ powercfg /change standby-timeout-dc 0 # Sur Batterie
 
 # Download wallpaper
 $wallpaper_path = 'C:\Users\Public\Pictures\wall3.jpg'
-Invoke-WebRequest -Uri 'https://github.com/romish17/win-scripts/blob/6edc93dc649892a74625bf0997f94c33da49ea46/assets/wallpapers/wall3.jpg' -OutFile $wallpaper_path
+Invoke-WebRequest -Uri 'https://github.com/romish17/win-scripts/blob/main/assets/wallpapers/wall3.jpg?raw=true' -OutFile $wallpaper_path
 
 # Set wallpaper
 $setwallpapersrc = @"
@@ -182,7 +182,7 @@ choco install virt-viewer -y
 net start wuauserv
 
 # Config Windows Terminal
-Invoke-WebRequest -Uri 'https://github.com/romish17/win-scripts/blob/6edc93dc649892a74625bf0997f94c33da49ea46/assets/terminal/settings.json' -OutFile $env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/romish17/win-scripts/main/assets/terminal/settings.json' -OutFile $env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 
 ###### Firefox
 #https://admx.help/?Category=Firefox&Policy=Mozilla.Policies.Firefox::DisableTelemetry
