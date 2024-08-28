@@ -154,30 +154,34 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 net stop wuauserv
 
 ###Test -> --ignore-checksums
-choco install firefox -y
+#choco install firefox -y
 #choco install termius -y
 choco install nmap -y
 choco install wget -y
 choco install curl -y
-#choco install wireguard -y
+choco install wireguard -y
 choco install vscode -y
 choco install spotify -y
 choco install nerd-fonts-FiraCode -y
 choco install FiraCode -y
 choco install github-desktop -y
 choco install putty.install -y
-choco install googlechrome -y
+#choco install googlechrome -y
 choco install vlc -y
 choco install 7zip -y
 choco install discord -y
 choco install oh-my-posh -y
 choco install pnpm -y
 choco install veracrypt -y
-choco install protonpass -y
 choco install protonmail -y
 choco install onedrive -y
 choco install nodejs -y
 choco install virt-viewer -y
+choco install sumatrapdf -y
+choco install veeam-agent -y
+choco install chromium -y
+choco install ssh-manager -y 
+choco install 1password -y
 
 net start wuauserv
 
