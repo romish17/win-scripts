@@ -182,6 +182,7 @@ choco install veeam-agent -y
 choco install chromium -y
 choco install ssh-manager -y 
 choco install 1password -y
+choco install docker-desktop -y
 
 net start wuauserv
 
