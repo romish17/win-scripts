@@ -191,7 +191,7 @@ Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/romish17/win-scripts/m
 
 ###### Firefox
 #https://admx.help/?Category=Firefox&Policy=Mozilla.Policies.Firefox::DisableTelemetry
-REG ADD "HKEY_LOCAL_MACHINE\Software\Policies\Mozilla\Firefox" /v DisableTelemetry /t REG_DWORD /d 1 /f
+# REG ADD "HKEY_LOCAL_MACHINE\Software\Policies\Mozilla\Firefox" /v DisableTelemetry /t REG_DWORD /d 1 /f
 
 #DellCommandUpdate
 If ($Fab -like "Dell Inc."){ choco install DellCommandUpdate -y; }
