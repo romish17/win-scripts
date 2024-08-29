@@ -183,6 +183,8 @@ choco install chromium -y
 choco install ssh-manager -y 
 choco install 1password -y
 choco install docker-desktop -y
+choco install copyq -y
+choco install tailscale -y
 
 net start wuauserv
 
