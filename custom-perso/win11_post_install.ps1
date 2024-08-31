@@ -185,6 +185,7 @@ choco install 1password -y
 choco install docker-desktop -y
 choco install copyq -y
 choco install tailscale -y
+choco install tabby -y
 
 net start wuauserv
 
