@@ -1,15 +1,55 @@
+#requires -version 5.1
+<#
+.SYNOPSIS
+  Automates Windows system configuration and customization.
+.DESCRIPTION
+  This script retrieves BIOS info, applies registry tweaks, disables unnecessary Windows features, 
+  removes pre-installed apps, installs software via Chocolatey, downloads and sets a custom wallpaper, 
+  configures Windows Terminal, and installs Windows updates.
+.PARAMETER <None>
+    No parameters required.
+.INPUTS
+  None
+.OUTPUTS
+  None
+.NOTES
+  Version:        0.3.2
+  Author:         Romish
+  Creation Date:  2024-09-07
+  Purpose/Change: Initial script development
+  
+.EXAMPLE
+  Run the script to automatically configure and optimize a Windows system:
+  .\WindowsConfigScript.ps1
+#>
+
+#----------------------------------------------------------[Declarations]----------------------------------------------------------
+# Get serial number in BIOS
+$SN = Get-CimInstance Win32_BIOS
+$SN = $SN.serialnumber
+# Get fab in BIOS
+$Fab = Get-CimInstance Win32_BIOS
+$Fab = $Fab.Manufacturer
+# REG PATH
+$NSP = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
+$CSM = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu"
+# Github variables
+$GH_UC= 'https://raw.githubusercontent.com'
+$GH_USER = 'romish17';
+$GH_REPOS = 'win-scripts'
+$GH_BRANCH = 'main'
+
+# Conf term Windows
+$TERM_CONF = $GH_UC+'/'+$GH_USER+'/'+$GH_REPOS+'/'+ $GH_BRANCH +'/assets/terminal/settings.json'
+
+#-----------------------------------------------------------[Execution]------------------------------------------------------------
+
 Set-ExecutionPolicy -Scope 'LocalMachine' -ExecutionPolicy 'RemoteSigned' -Force;
 ## Disable UAC for Builtin admin
 reg add HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System /v FilterAdministratorToken /t REG_DWORD /d 0 /f
-#=============================================================================================
-# Recuperation numeros de serie dans le BIOS
-    $SN = Get-CimInstance Win32_BIOS
-    $SN = $SN.serialnumber
-#=============================================================================================
-# Recuperation du Nom du fabricant dans le BIOS
-    $Fab = Get-CimInstance Win32_BIOS
-    $Fab = $Fab.Manufacturer
 
+
+# Remove Teams chat
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\Windows Chat" /f /v ChatIcon /t REG_DWORD /d 3
 Get-AppxPackage MicrosoftTeams*|Remove-AppxPackage -AllUsers
 Get-AppxProvisionedPackage -online | where-object {$_.PackageName -like '*MicrosoftTeams*'} | Remove-AppxProvisionedPackage -online
@@ -53,11 +93,6 @@ reg add "HKCU\Software\Policies\Microsoft\Edge" /v "HideFirstRunExperience" /t R
 reg add "HKCU\Software\Policies\Microsoft\Edge" /v "HomepageLocation" /t REG_SZ /d "https://www.google.fr" /f
 # https://admx.help/?Category=EdgeChromium&Policy=Microsoft.Policies.Edge::HomepageLocation
 
-taskkill /F /IM explorer.exe;start explorer
-
-# Declaration des variables des emplacements de cle de registre
-$NSP = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\NewStartPanel"
-$CSM = "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\HideDesktopIcons\ClassicStartMenu"
 # Ce PC
 REG ADD $NSP /v "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" /t REG_DWORD /d 0 /f
 REG ADD $CSM /v "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" /t REG_DWORD /d 0 /f
@@ -104,11 +139,9 @@ REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Personaliz
 REG ADD "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\PersonalizationCSP" /v LockScreenImageStatus /t REG_DWORD /d 1 /f
 
 ## Restart explorer 
-taskkill /f /im explorer.exe
-start explorer.exe
-
+taskkill /F /IM explorer.exe;start explorer
 ## Delete Builtin App
-<# 
+
 $UWPApps = @(
 'Microsoft.Microsoft3DViewer',
 'Microsoft.MicrosoftOfficeHub',
@@ -140,7 +173,7 @@ foreach ($UWPApp in $UWPApps) {
 Get-AppxPackage -Name $UWPApp -AllUsers | Remove-AppxPackage
 Get-AppXProvisionedPackage -Online | Where-Object DisplayName -eq $UWPApp | Remove-AppxProvisionedPackage -Online
 }
- #>
+
 # Set PSRepository
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force
 Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
@@ -155,7 +188,7 @@ net stop wuauserv
 
 ###Test -> --ignore-checksums
 #choco install firefox -y
-#choco install termius -y
+choco install termius -y
 choco install nmap -y
 choco install wget -y
 choco install curl -y
@@ -186,11 +219,13 @@ choco install docker-desktop -y
 choco install copyq -y
 choco install tailscale -y
 choco install tabby -y
+choco install signal -y
+choco install brave -y
 
 net start wuauserv
 
 # Config Windows Terminal
-Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/romish17/win-scripts/main/assets/terminal/settings.json' -OutFile $env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
+Invoke-WebRequest -Uri $TERM_CONF -OutFile $env:USERPROFILE\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
 
 ###### Firefox
 #https://admx.help/?Category=Firefox&Policy=Mozilla.Policies.Firefox::DisableTelemetry
