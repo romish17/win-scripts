@@ -99,6 +99,10 @@ REG ADD $CSM /v "{20D04FE0-3AEA-1069-A2D8-08002B30309D}" /t REG_DWORD /d 0 /f
 # Definition de la cle de registre du verouillage du pave numerique
 REG ADD "HKEY_USERS\.DEFAULT\Control Panel\Keyboard" /v "InitialKeyboardIndicators" /d 2 /f
 
+# TaskbarEndTask
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings" /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced\TaskbarDeveloperSettings" /v TaskbarEndTask /t REG_DWORD /d 1 /f
+
 # Reglage extinction de l'ecran
 powercfg /change monitor-timeout-ac 60 # Sur alimentation
 powercfg /change monitor-timeout-dc 60 # Sur Batterie
