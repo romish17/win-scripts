@@ -194,46 +194,57 @@ Install-Module PSWindowsUpdate -force
 
 ### Choco install
 Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
-# choco install microsoft-windows-terminal microsoft-teams vscode atom git terraform awscli lxc multipass nano nmap wget curl
+
 # Disable Windows Update during software installation
 net stop wuauserv
 
-###Test -> --ignore-checksums
-#choco install firefox -y
-choco install termius -y
-choco install nmap -y
-choco install wget -y
-choco install curl -y
-choco install wireguard -y
-choco install vscode -y
-choco install spotify -y
-choco install nerd-fonts-FiraCode -y
-choco install FiraCode -y
-choco install github-desktop -y
-choco install putty.install -y
-#choco install googlechrome -y
-choco install vlc -y
-choco install 7zip -y
-choco install discord -y
-choco install oh-my-posh -y
-choco install pnpm -y
-choco install veracrypt -y
-choco install protonmail -y
-choco install onedrive -y
-choco install nodejs -y
-choco install virt-viewer -y
-choco install sumatrapdf -y
-choco install veeam-agent -y
-choco install chromium -y
-choco install ssh-manager -y 
-choco install 1password -y
-choco install docker-desktop -y
-choco install copyq -y
-choco install tailscale -y
-choco install tabby -y
-choco install signal -y
-choco install brave -y
+# Liste des packages à installer
+$packages = @(
+    "termius",
+    "nmap",
+    "wget",
+    "curl",
+    "wireguard",
+    "vscode",
+    "spotify",
+    "nerd-fonts-FiraCode",
+    "FiraCode",
+    "github-desktop",
+    "putty.install",
+    #"googlechrome",   # Désactivé pour l'instant
+    "vlc",
+    "7zip",
+    "discord",
+    "oh-my-posh",
+    "pnpm",
+    "veracrypt",
+    "protonmail",
+    "onedrive",
+    "nodejs",
+    "virt-viewer",
+    "sumatrapdf",
+    "veeam-agent",
+    "chromium",
+    "ssh-manager",
+    "1password",
+    "docker-desktop",
+    "copyq",
+    "tailscale",
+    "tabby",
+    "signal",
+    "brave"
+)
 
+# Installation des packages
+foreach ($package in $packages) {
+    try {
+        choco install $package -y
+    } catch {
+        Write-Host "Erreur lors de l'installation de $package"
+    }
+}
+
+# Start Windows update service
 net start wuauserv
 
 # Config Windows Terminal
