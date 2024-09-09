@@ -200,7 +200,6 @@ net stop wuauserv
 
 # Liste des packages à installer
 $packages = @(
-    "termius",
     "nmap",
     "wget",
     "curl",
@@ -232,7 +231,9 @@ $packages = @(
     "tailscale",
     "tabby",
     "signal",
-    "brave"
+    "brave",
+    "virtualclonedrive",
+    "xpipe"
 )
 
 # Installation des packages
